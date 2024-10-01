@@ -1,0 +1,25 @@
+### 유저 등록 API - 선생님
+POST http://localhost:8080/members
+Content-Type: application/json
+
+{
+  "name": "mangKyu",
+  "memberType": "TEACHER"
+}
+
+### 유저 조회 API
+GET http://localhost:8080/members/member/1
+Accept: application/json
+
+### 유저 등록 API - 학생
+POST http://localhost:8080/members
+Content-Type: application/json
+
+{
+  "name": "whee",
+  "memberType": "STUDENT"
+}
+
+### 유저 조회 API
+GET http://localhost:8080/members/member/2
+Accept: application/json
