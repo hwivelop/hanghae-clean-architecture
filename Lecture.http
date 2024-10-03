@@ -1,0 +1,13 @@
+### 강의 등록 API
+POST http://localhost:8080/lecture
+Content-Type: application/json
+
+{
+  "lectureName": "클린아키텍쳐",
+  "memberId": 1,
+  "memberName": "mangKyu",
+  "lectureId": 1,
+  "capacity": 30,
+  "openDate": "2024-10-30",
+  "isClose": false
+}
