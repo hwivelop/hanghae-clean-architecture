@@ -12,6 +12,17 @@ Content-Type: application/json
   "isClose": false
 }
 
+### 강의 신청 API
+POST http://localhost:8080/lecture/apply
+Content-Type: application/json
+
+{
+  "memberId": 2,
+  "lectureId": 1,
+  "lectureItemId": 1,
+  "applyStatus": "APPLY"
+}
+
 ### 강의 조회 API
-GET http://localhost:8080/lecture/history/1
+GET http://localhost:8080/lecture/history/2
 Accept: application/json

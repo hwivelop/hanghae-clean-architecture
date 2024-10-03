@@ -7,4 +7,6 @@ import java.util.*;
 public interface LectureHistoryRepository extends JpaRepository<LectureHistory, Long> {
 
     List<LectureHistory> findByMemberId(long memberId);
+
+    boolean existsByMemberIdAndLectureIdAndLectureItemId(Long memberId, Long lectureId, Long lectureItemId);
 }

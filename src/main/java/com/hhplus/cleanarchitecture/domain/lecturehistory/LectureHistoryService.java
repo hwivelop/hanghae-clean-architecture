@@ -21,6 +21,7 @@ public class LectureHistoryService {
                 LectureHistory.builder()
                         .memberId(dto.getMemberId())
                         .lectureId(dto.getLectureId())
+                        .lectureItemId(dto.getLectureItemId())
                         .applyStatus(dto.getApplyStatus())
                         .build()
         );
@@ -32,5 +33,15 @@ public class LectureHistoryService {
     public List<LectureHistory> getByMemberId(long memberId) {
 
         return lectureHistoryRepository.findByMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public void ifApplyHistoryExistThenThrow(Long memberId, Long lectureId, Long lectureItemId) {
+
+        boolean isAlreadyApplied = lectureHistoryRepository.existsByMemberIdAndLectureIdAndLectureItemId(memberId, lectureId, lectureItemId);
+
+        if (isAlreadyApplied) {
+            throw new IllegalArgumentException("이미 신청한 강의입니다.");
+        }
     }
 }

@@ -47,4 +47,16 @@ public class LectureController {
                 registerFacadeService.getApplyHistoryByMemberId(memberId)
         );
     }
+
+    /**
+     * 강의 신청
+     */
+    @PostMapping("/apply")
+    public ResponseEntity<Void> applyLecture(@Valid @RequestBody LectureApplyRequest request) {
+        log.info("memberId = {}, status = {}", request.getMemberId(), request.getApplyStatus());
+
+        registerFacadeService.applyLecture(request.toReqeust());
+
+        return ResponseEntity.ok().build();
+    }
 }

@@ -1,11 +1,14 @@
 package com.hhplus.cleanarchitecture.domain.lectureinventory;
 
+import com.hhplus.cleanarchitecture.domain.facade.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lectureinventory.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lectureinventory.dto.response.*;
 import lombok.*;
+import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LectureInventoryService {
@@ -34,4 +37,22 @@ public class LectureInventoryService {
 
         return LectureInventoryDto.of(lectureInventory);
     }
+
+    @Transactional
+    public LectureInventoryDto updateLectureInventoryInfo(LectureApplyDto dto) {
+
+        // 비관적 락을 사용하여 잔여 좌석을 가져옴
+        LectureInventory lectureInventory = lectureInventoryRepository.findByLectureIdAndLectureItemIdWithLock(dto.getLectureId(), dto.getLectureItemId())
+                .orElseThrow(() -> new IllegalArgumentException("잔여 좌석 정보를 조회할 수 없습니다.")
+                );
+
+        lectureInventory.remainingSeatsZeroThenThrow();
+
+        lectureInventory.updateRemainingSeats(dto.getApplyStatus());
+
+        return LectureInventoryDto.of(
+                lectureInventoryRepository.save(lectureInventory)
+        );
+    }
+
 }

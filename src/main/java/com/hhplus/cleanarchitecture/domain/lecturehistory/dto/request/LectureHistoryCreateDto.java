@@ -13,5 +13,7 @@ public class LectureHistoryCreateDto {
 
     Long lectureId;
 
+    Long lectureItemId;
+
     ApplyStatus applyStatus;
 }

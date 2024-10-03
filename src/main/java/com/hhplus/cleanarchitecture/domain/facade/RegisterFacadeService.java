@@ -6,6 +6,7 @@ import com.hhplus.cleanarchitecture.domain.lecture.*;
 import com.hhplus.cleanarchitecture.domain.lecture.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lecture.dto.response.*;
 import com.hhplus.cleanarchitecture.domain.lecturehistory.*;
+import com.hhplus.cleanarchitecture.domain.lecturehistory.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lectureinventory.*;
 import com.hhplus.cleanarchitecture.domain.lectureinventory.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lectureinventory.dto.response.*;
@@ -13,11 +14,13 @@ import com.hhplus.cleanarchitecture.domain.lectureitem.*;
 import com.hhplus.cleanarchitecture.domain.lectureitem.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lectureitem.dto.response.*;
 import lombok.*;
+import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
 import java.util.stream.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RegisterFacadeService {
@@ -66,7 +69,6 @@ public class RegisterFacadeService {
      */
     public List<LectureApplyHistoryDto> getApplyHistoryByMemberId(long memberId) {
 
-        // 히스토리 내역 조회
         List<LectureHistory> lectureHistories = lectureHistoryService.getByMemberId(memberId);
 
         return lectureHistories.stream()
@@ -83,5 +85,25 @@ public class RegisterFacadeService {
                             history.getApplyStatus()
                     );
                 }).collect(Collectors.toList());
+    }
+
+    public void applyLecture(LectureApplyDto dto) {
+
+        long memberId = dto.getMemberId();
+        long lectureId = dto.getLectureId();
+        long lectureItemId = dto.getLectureItemId();
+
+        lectureHistoryService.ifApplyHistoryExistThenThrow(memberId, lectureId, lectureItemId);
+
+        lectureInventoryService.updateLectureInventoryInfo(dto);
+
+        lectureHistoryService.create(
+                LectureHistoryCreateDto.builder()
+                        .memberId(memberId)
+                        .lectureId(lectureId)
+                        .lectureItemId(lectureItemId)
+                        .applyStatus(dto.getApplyStatus())
+                        .build()
+        );
     }
 }
