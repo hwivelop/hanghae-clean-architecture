@@ -8,6 +8,7 @@ import java.time.*;
 
 @Getter
 @Builder
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "lecture")
