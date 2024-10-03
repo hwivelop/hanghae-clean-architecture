@@ -11,3 +11,7 @@ Content-Type: application/json
   "openDate": "2024-10-30",
   "isClose": false
 }
+
+### 강의 조회 API
+GET http://localhost:8080/lecture/history/1
+Accept: application/json

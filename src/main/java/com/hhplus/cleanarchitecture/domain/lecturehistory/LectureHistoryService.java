@@ -2,9 +2,11 @@ package com.hhplus.cleanarchitecture.domain.lecturehistory;
 
 import com.hhplus.cleanarchitecture.domain.lecturehistory.dto.request.*;
 import com.hhplus.cleanarchitecture.domain.lecturehistory.dto.response.*;
-import jakarta.transaction.*;
 import lombok.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -24,5 +26,11 @@ public class LectureHistoryService {
         );
 
         return LectureHistoryDto.of(lectureHistory);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LectureHistory> getByMemberId(long memberId) {
+
+        return lectureHistoryRepository.findByMemberId(memberId);
     }
 }

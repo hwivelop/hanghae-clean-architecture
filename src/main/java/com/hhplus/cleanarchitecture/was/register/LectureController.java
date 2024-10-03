@@ -10,6 +10,8 @@ import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.*;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +33,18 @@ public class LectureController {
 
         return ResponseEntity.ok(
                 LectureInfoResponse.toResponse(lectureInfoDto)
+        );
+    }
+
+    /**
+     * 유저가 신청한 강의 조회
+     */
+    @GetMapping("/history/{memberId}")
+    public ResponseEntity<List<LectureApplyHistoryDto>> getLectureInfo(@PathVariable("memberId") long memberId) {
+        log.info("memberId = {}", memberId);
+
+        return ResponseEntity.ok(
+                registerFacadeService.getApplyHistoryByMemberId(memberId)
         );
     }
 }
