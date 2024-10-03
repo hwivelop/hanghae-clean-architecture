@@ -10,6 +10,7 @@ import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.*;
 import java.util.*;
 
 @Slf4j
@@ -58,5 +59,16 @@ public class LectureController {
         registerFacadeService.applyLecture(request.toReqeust());
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 신청 가능한 강의 목록 조회
+     */
+    @GetMapping("/available")
+    public ResponseEntity<Map<LocalDate, List<LectureInfoDto>>> getAvailableLecture() {
+
+        return ResponseEntity.ok(
+                registerFacadeService.getAvailableLectureList()
+        );
     }
 }

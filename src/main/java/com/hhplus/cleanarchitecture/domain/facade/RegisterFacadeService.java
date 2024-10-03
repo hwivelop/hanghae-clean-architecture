@@ -17,6 +17,7 @@ import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 
+import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -105,5 +106,23 @@ public class RegisterFacadeService {
                         .applyStatus(dto.getApplyStatus())
                         .build()
         );
+    }
+
+    /**
+     * 신청 가능한 강의 목록 조회
+     */
+    public Map<LocalDate, List<LectureInfoDto>> getAvailableLectureList() {
+
+        List<LectureItemDto> availableItemDtoList = lectureItemService.getAvailable();
+
+        return availableItemDtoList.stream()
+                .collect(Collectors.groupingBy(
+                        LectureItemDto::getOpenDate,
+                        Collectors.mapping(it -> {
+                            LectureDto lectureDto = lectureService.getOrThrow(it.getLectureId());
+                            LectureInventoryDto lectureInventoryDto = lectureInventoryService.getOrThrow(it.getLectureId(), it.getId());
+                            return LectureInfoDto.of(lectureDto, it, lectureInventoryDto);
+                        }, Collectors.toList())
+                ));
     }
 }
