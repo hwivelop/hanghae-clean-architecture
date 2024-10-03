@@ -31,4 +31,8 @@ public class LectureItem extends BaseEntity {
 
     @Column(name = "is_close")
     private Boolean isClose;
+
+    public void chaneIsCloseTrue() {
+        this.isClose = true;
+    }
 }

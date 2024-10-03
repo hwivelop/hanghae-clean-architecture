@@ -96,7 +96,11 @@ public class RegisterFacadeService {
 
         lectureHistoryService.ifApplyHistoryExistThenThrow(memberId, lectureId, lectureItemId);
 
-        lectureInventoryService.updateLectureInventoryInfo(dto);
+        LectureInventoryDto lectureInventoryDto = lectureInventoryService.updateLectureInventoryInfo(dto);
+
+        if (lectureInventoryDto.getRemainingSeats() == 0) {
+            lectureItemService.changeCloseStatus(lectureInventoryDto.getLectureItemId());
+        }
 
         lectureHistoryService.create(
                 LectureHistoryCreateDto.builder()

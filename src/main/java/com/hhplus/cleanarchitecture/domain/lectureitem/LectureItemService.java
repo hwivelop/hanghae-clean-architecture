@@ -51,4 +51,14 @@ public class LectureItemService {
                 .map(LectureItemDto::of)
                 .collect(Collectors.toList());
     }
+
+    public void changeCloseStatus(Long lectureItemId) {
+
+        LectureItem lectureItem = lectureItemRepository.findById(lectureItemId)
+                .orElseThrow(() -> new IllegalStateException("특강 아이템을 찾을 수 없습니다."));
+
+        lectureItem.chaneIsCloseTrue();
+
+        lectureItemRepository.save(lectureItem);
+    }
 }
