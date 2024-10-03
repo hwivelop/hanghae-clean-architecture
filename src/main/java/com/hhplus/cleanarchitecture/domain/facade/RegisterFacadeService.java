@@ -96,6 +96,9 @@ public class RegisterFacadeService {
 
         lectureHistoryService.ifApplyHistoryExistThenThrow(memberId, lectureId, lectureItemId);
 
+        /**
+         * code review 여기에서 lectureInventory 객체를 조회할 수 없어 null이 반환되는 이슈가 발생
+         */
         LectureInventoryDto lectureInventoryDto = lectureInventoryService.updateLectureInventoryInfo(dto);
 
         if (lectureInventoryDto.getRemainingSeats() == 0) {

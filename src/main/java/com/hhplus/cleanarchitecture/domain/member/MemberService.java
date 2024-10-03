@@ -7,6 +7,9 @@ import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 
+import java.util.*;
+import java.util.stream.*;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -40,5 +43,14 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
 
         return MemberDto.of(member);
+    }
+    @Transactional(readOnly = true)
+    public List<MemberDto> getByAll() {
+
+        List<Member> member = memberRepository.findAll();
+
+        return member.stream()
+                .map(MemberDto::of)
+                .collect(Collectors.toList());
     }
 }
