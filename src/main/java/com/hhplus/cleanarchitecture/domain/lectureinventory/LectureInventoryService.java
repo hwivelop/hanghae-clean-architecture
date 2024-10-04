@@ -8,12 +8,15 @@ import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 
+import java.util.concurrent.locks.*;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class LectureInventoryService {
 
     private final LectureInventoryRepository lectureInventoryRepository;
+    private final ReentrantLock lock = new ReentrantLock(true);
 
     @Transactional
     public LectureInventoryDto create(LectureInventoryCreateDto dto) {
@@ -41,18 +44,24 @@ public class LectureInventoryService {
     @Transactional
     public LectureInventoryDto updateLectureInventoryInfo(LectureApplyDto dto) {
 
-        // 비관적 락을 사용하여 잔여 좌석을 가져옴
-        LectureInventory lectureInventory = lectureInventoryRepository.findByLectureIdAndLectureItemIdWithLock(dto.getLectureId(), dto.getLectureItemId())
-                .orElseThrow(() -> new IllegalArgumentException("잔여 좌석 정보를 조회할 수 없습니다.")
-                );
+        lock.lock();
 
-        lectureInventory.remainingSeatsZeroThenThrow();
+        try {
+            // 비관적 락을 사용하여 잔여 좌석을 가져옴
+            LectureInventory lectureInventory = lectureInventoryRepository.findByLectureIdAndLectureItemIdWithLock(dto.getLectureId(), dto.getLectureItemId())
+                    .orElseThrow(() -> new IllegalArgumentException("잔여 좌석 정보를 조회할 수 없습니다.")
+                    );
 
-        lectureInventory.updateRemainingSeats(dto.getApplyStatus());
+            lectureInventory.remainingSeatsZeroThenThrow();
 
-        return LectureInventoryDto.of(
-                lectureInventoryRepository.save(lectureInventory)
-        );
+            lectureInventory.updateRemainingSeats(dto.getApplyStatus());
+
+            return LectureInventoryDto.of(
+                    lectureInventoryRepository.save(lectureInventory)
+            );
+
+        } finally {
+            lock.unlock();
+        }
     }
-
 }
